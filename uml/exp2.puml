@@ -1,0 +1,37 @@
+@startuml
+' 实验二：工厂方法模式（敌机） + 简单工厂模式（道具）
+
+' ===== 工厂方法模式（敌机）=====
+abstract class AbstractAircraft
+
+interface EnemyFactory {
+    + createEnemy(): AbstractAircraft
+}
+
+class MobEnemyFactory
+class ProEnemyFactory
+class PromaxEnemyFactory
+class AceEnemyFactory
+
+EnemyFactory <|.. MobEnemyFactory
+EnemyFactory <|.. ProEnemyFactory
+EnemyFactory <|.. PromaxEnemyFactory
+EnemyFactory <|.. AceEnemyFactory
+
+' ===== 简单工厂模式（道具）=====
+abstract class AbstractProp
+class PropFactory {
+    + {static} createProp(AbstractAircraft, int, int): AbstractProp
+}
+class BloodProp
+class BulletProp
+class BombProp
+class FreezeProp
+
+AbstractProp <|-- BloodProp
+AbstractProp <|-- BulletProp
+AbstractProp <|-- BombProp
+AbstractProp <|-- FreezeProp
+
+PropFactory ..> AbstractProp
+@enduml

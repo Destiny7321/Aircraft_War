@@ -1,0 +1,59 @@
+@startuml
+' 实验一：继承关系 + 单例模式
+
+abstract class AbstractFlyingObject {
+    - locationX: int
+    - locationY: int
+    - valid: boolean
+    + getLocationX(): int
+    + getLocationY(): int
+    + notValid(): boolean
+    + vanish(): void
+    + getImage(): BufferedImage
+}
+
+abstract class AbstractAircraft {
+    - hp: int
+    - speedX: int
+    - speedY: int
+    + getHp(): int
+    + decreaseHp(int): void
+    + {abstract} forward(): void
+}
+
+class HeroAircraft {
+    - {static} instance: HeroAircraft
+    - HeroAircraft()
+    + {static} getHeroAircraft(): HeroAircraft
+}
+
+class MobEnemy
+class ProEnemy
+class BaseBullet {
+    - power: int
+    + forward(): void
+}
+class HeroBullet
+class EnemyBullet
+
+abstract class AbstractProp {
+    + {abstract} apply(HeroAircraft): void
+}
+class BloodProp
+class BulletProp
+
+' 继承关系
+AbstractFlyingObject <|-- AbstractAircraft
+AbstractFlyingObject <|-- BaseBullet
+AbstractFlyingObject <|-- AbstractProp
+
+AbstractAircraft <|-- HeroAircraft
+AbstractAircraft <|-- MobEnemy
+AbstractAircraft <|-- ProEnemy
+
+BaseBullet <|-- HeroBullet
+BaseBullet <|-- EnemyBullet
+
+AbstractProp <|-- BloodProp
+AbstractProp <|-- BulletProp
+@enduml

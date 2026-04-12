@@ -1,0 +1,84 @@
+@startuml
+' 抽象飞行物基类
+abstract class AbstractFlyingObject {
+  # locationX:int
+  # locationY:int
+  # speedX:int
+  # speedY:int
+  # image:BufferedImage
+  # width:int
+  # height:int
+  # isValid:boolean
+
+  + AbstractFlyingObject(int locationX, int locationY, int speedX, int speedY)
+  + forward():void
+  + crash(AbstractFlyingObject flyingObject):boolean
+  + setLocation(double locationX, double locationY):void
+  + getLocationX():int
+  + getLocationY():int
+  + getSpeedX():int
+  + getSpeedY():int
+  + getImage():BufferedImage
+  + getWidth():int
+  + getHeight():int
+  + notValid():boolean
+  + vanish():void
+}
+
+' 抽象飞机类（继承自抽象飞行物）
+abstract class AbstractAircraft {
+  # maxHp:int
+  # hp:int
+
+  + AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+  + decreaseHp(int increase):void
+  + getHp():int
+  + {abstract} shoot():List<BaseBullet>
+}
+
+' 玩家飞机类（继承自抽象飞机）
+class HeroAircraft {
+  - shootNum:int
+  - power:int
+  - direction:int
+
+  + HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+  + forward():void
+  + shoot():List<BaseBullet>
+}
+
+' 敌机类（继承自抽象飞机）
+class MobEnemy {
+  + MobEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+  + forward():void
+  + shoot():List<BaseBullet>
+}
+
+' 基础子弹类（继承自抽象飞行物）
+abstract class BaseBullet {
+  - power:int
+
+  + BaseBullet(int locationX, int locationY, int speedX, int speedY, int power)
+  + forward():void
+  + getPower():int
+}
+
+' 玩家子弹类（继承自基础子弹）
+class HeroBullet {
+  + HeroBullet(int locationX, int locationY, int speedX, int speedY, int power)
+}
+
+' 敌机子弹类（继承自基础子弹）
+class EnemyBullet {
+  + EnemyBullet(int locationX, int locationY, int speedX, int speedY, int power)
+}
+
+' 继承关系定义
+AbstractFlyingObject <|-- AbstractAircraft
+AbstractFlyingObject <|-- BaseBullet
+AbstractAircraft <|-- HeroAircraft
+AbstractAircraft <|-- MobEnemy
+BaseBullet <|-- HeroBullet
+BaseBullet <|-- EnemyBullet
+
+@enduml
