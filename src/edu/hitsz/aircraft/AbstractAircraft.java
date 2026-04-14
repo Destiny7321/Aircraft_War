@@ -35,6 +35,7 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
         this.speedX = speedX;
         this.speedY = speedY;
         this.hp = hp;
+        this.maxHp = hp;
         this.shootStrategy = shootStrategy;
     }
 
@@ -61,6 +62,7 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
     public int getHp() {
         return hp;
     }
+    // 给英雄机切换弹道用！！！
 
 
     /**

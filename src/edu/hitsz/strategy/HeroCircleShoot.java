@@ -6,17 +6,20 @@ import edu.hitsz.bullet.HeroBullet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HeroPropBulletShoot implements ShootStrategy {
+public class HeroCircleShoot implements ShootStrategy {
     @Override
     public List<BaseBullet> shoot(AbstractAircraft aircraft) {
         List<BaseBullet> res = new ArrayList<>();
         int x = aircraft.getLocationX();
-        int y = aircraft.getLocationY() - 20;
-        int speedY = aircraft.getSpeedY() - 8;
+        int y = aircraft.getLocationY();
+        double radius = 6;
 
-        res.add(new HeroBullet(x - 18, y, -2, speedY, 10));
-        res.add(new HeroBullet(x, y, 0, speedY, 10));
-        res.add(new HeroBullet(x + 18, y, +2, speedY, 10));
+        for (int i = 0; i < 10; i++) {
+            double angle = Math.PI * 2 * i / 10;
+            int sx = (int) (radius * Math.cos(angle));
+            int sy = (int) (radius * Math.sin(angle)) - 8;
+            res.add(new HeroBullet(x, y, sx, sy, 10));
+        }
         return res;
     }
 }

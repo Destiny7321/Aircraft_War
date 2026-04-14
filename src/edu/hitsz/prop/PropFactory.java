@@ -17,9 +17,8 @@ public class PropFactory {
         public static AbstractProp createProp(AbstractAircraft enemy, int locationX, int locationY) {
             double rand = Math.random();
 
-            // ==============================
             // 精英敌机 ProEnemy：不掉冰冻
-            // ==============================
+
             if (enemy instanceof ProEnemy) {
                 if (rand < 0.25) {
                     return new BloodProp(locationX, locationY, 0, 10);
@@ -32,9 +31,8 @@ public class PropFactory {
                 }
             }
 
-            // ==============================
+
             // 精锐 PromaxEnemy：不掉普通子弹
-            // ==============================
             else if (enemy instanceof PromaxEnemy) {
                 if (rand < 0.25) {
                     return new BloodProp(locationX, locationY, 0, 10);
@@ -47,9 +45,7 @@ public class PropFactory {
                 }
             }
 
-            // ==============================
             // 王牌 AceEnemy：5种道具全都掉
-            // ==============================
             else if (enemy instanceof AceEnemy) {
                 if (rand < 0.20) {
                     return new BloodProp(locationX, locationY, 0, 10);
@@ -64,7 +60,6 @@ public class PropFactory {
                 }
             }
 
-            // 普通敌机、其他情况：不掉道具
             return null;
         }
     }

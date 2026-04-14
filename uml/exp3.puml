@@ -1,0 +1,37 @@
+@startuml
+' 实验三：策略模式
+
+interface ShootStrategy {
+    + shoot(AbstractAircraft): List<BaseBullet>
+}
+
+class HeroSingleShoot
+class HeroScatterShoot
+class HeroCircleShoot
+class ProSingleShoot
+class PromaxDoubleShoot
+class AceScatterShoot
+class BossCircleShoot
+
+ShootStrategy <|.. HeroSingleShoot
+ShootStrategy <|.. HeroScatterShoot
+ShootStrategy <|.. HeroCircleShoot
+ShootStrategy <|.. ProSingleShoot
+ShootStrategy <|.. PromaxDoubleShoot
+ShootStrategy <|.. AceScatterShoot
+ShootStrategy <|.. BossCircleShoot
+
+abstract class AbstractAircraft {
+    - shootStrategy: ShootStrategy
+    + shoot(): List<BaseBullet>
+    + setShootStrategy(ShootStrategy): void
+}
+
+class HeroAircraft
+class BossEnemy
+
+AbstractAircraft <|-- HeroAircraft
+AbstractAircraft <|-- BossEnemy
+
+AbstractAircraft --> ShootStrategy
+@enduml

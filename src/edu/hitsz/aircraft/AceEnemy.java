@@ -3,13 +3,15 @@ package edu.hitsz.aircraft;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.application.Main;
+import edu.hitsz.strategy.AceScatterShoot;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class AceEnemy extends AbstractAircraft {
 
     public AceEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
-        super(locationX, locationY, speedX, speedY, hp);
+        super(locationX, locationY, speedX, speedY, hp, new AceScatterShoot());
     }
 
     @Override

@@ -52,6 +52,8 @@ public class Game extends JPanel {
 
     //游戏结束标志
     private boolean gameOverFlag = false;
+    //判断boss敌机是否出现
+    private boolean bossAppeared = false;
 
     public Game() {
         heroAircraft = HeroAircraft.getHeroAircraft();
@@ -78,6 +80,19 @@ public class Game extends JPanel {
             @Override
             public void run() {
         //敌机生成规律控制
+                //BOSS 200 分触发
+                if (score >= 200 && !bossAppeared) {
+                    // 创建 BOSS：位置X=250，Y=80，左右速度3，Y速度0，血量1000
+                    BossEnemy boss = new BossEnemy(
+                            250,
+                            80,
+                            3,    // 左右移动速度
+                            0,    // 不向下掉
+                            1000  // 血量
+                    );
+                    enemyAircrafts.add(boss);  // 加入BOSS敌机列表
+                    bossAppeared = true;  // 只出现一次
+                }
                 enemySpawnCounter++;
                 if (enemySpawnCounter >= enemySpawnCycle) {
                     enemySpawnCounter = 0;
@@ -214,8 +229,23 @@ public class Game extends JPanel {
                                         enemyAircraft.getLocationX(),
                                         enemyAircraft.getLocationY()
                                 );
-                                propList.add(prop);
-
+                                if(prop!= null) {
+                                    propList.add(prop);
+                                }
+                        }
+                        // 判断是不是 BOSS
+                        if (enemyAircraft instanceof BossEnemy) {
+                            // BOSS 死亡 → 一次性掉 3 个道具
+                            for (int i = 0; i < 3; i++) {
+                                AbstractProp prop = PropFactory.createProp(
+                                        enemyAircraft,
+                                        enemyAircraft.getLocationX(),
+                                        enemyAircraft.getLocationY()
+                                );
+                                if(prop!= null) {
+                                    propList.add(prop);
+                                }
+                            }
                         }
                     }
                 }
