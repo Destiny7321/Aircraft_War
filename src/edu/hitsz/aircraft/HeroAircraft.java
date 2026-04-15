@@ -42,7 +42,7 @@ public class HeroAircraft extends AbstractAircraft {
         // 英雄机由鼠标控制，不通过forward函数移动
     }
 
-    // 删除原来的 shoot() 方法策略模式替代）
+    // 删除原来的 shoot()方法策略模式替代
 
     // 加血方法
     public void increaseHp(int addHp) {

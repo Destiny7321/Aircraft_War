@@ -82,16 +82,10 @@ public class Game extends JPanel {
         //敌机生成规律控制
                 //BOSS 200 分触发
                 if (score >= 200 && !bossAppeared) {
-                    // 创建 BOSS：位置X=250，Y=80，左右速度3，Y速度0，血量1000
-                    BossEnemy boss = new BossEnemy(
-                            250,
-                            80,
-                            3,    // 左右移动速度
-                            0,    // 不向下掉
-                            1000  // 血量
-                    );
-                    enemyAircrafts.add(boss);  // 加入BOSS敌机列表
-                    bossAppeared = true;  // 只出现一次
+                    EnemyFactory factory = new BossEnemyFactory();
+                    AbstractAircraft boss = factory.createEnemy();
+                    enemyAircrafts.add(boss);
+                    bossAppeared = true;
                 }
                 enemySpawnCounter++;
                 if (enemySpawnCounter >= enemySpawnCycle) {

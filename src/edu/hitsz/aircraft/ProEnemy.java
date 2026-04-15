@@ -19,13 +19,7 @@ public class ProEnemy extends AbstractAircraft {
     public ProEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp, new ProSingleShoot());
     }
-    private int shootNum = 1;
 
-    //子弹威力
-    private int power = 30;
-
-    //子弹射击方向 (向上发射：-1，向下发射：1)
-    private int direction = 1;
     @Override
     public void forward() {
         super.forward();

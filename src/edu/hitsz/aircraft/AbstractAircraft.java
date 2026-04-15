@@ -19,9 +19,7 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
     // 策略模式
     private ShootStrategy shootStrategy;
 
-    // ========================
-    // 正确构造：只加策略参数
-    // ========================
+
     public AbstractAircraft(
             int locationX,
             int locationY,
@@ -62,7 +60,7 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
     public int getHp() {
         return hp;
     }
-    // 给英雄机切换弹道用！！！
+
 
 
     /**
