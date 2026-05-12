@@ -3,12 +3,15 @@ package edu.hitsz.aircraft;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.application.Main;
+import edu.hitsz.observer.EnemyObserver;
 import edu.hitsz.strategy.AceScatterShoot;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class AceEnemy extends AbstractAircraft {
+public class AceEnemy extends AbstractAircraft implements EnemyObserver {
 
     public AceEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp, new AceScatterShoot());
@@ -42,5 +45,21 @@ public class AceEnemy extends AbstractAircraft {
         res.add(new EnemyBullet(x + 25, y,  3, speedY, 10));
 
         return res;
+    }
+    @Override
+    public void updateBomb() {
+        decreaseHp(50); // 掉血
+    }
+
+    @Override
+    public void updateFreeze() {
+        int oldSpeedY = speedY;
+        speedY = 1;    // 减速
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                speedY = oldSpeedY;
+            }
+        }, 5000); // 5秒恢复
     }
 }

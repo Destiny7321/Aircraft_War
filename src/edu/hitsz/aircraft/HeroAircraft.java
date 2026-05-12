@@ -7,6 +7,7 @@ import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.strategy.HeroSingleShoot;
 import edu.hitsz.strategy.HeroScatterShoot;
 import edu.hitsz.strategy.HeroCircleShoot;
+import edu.hitsz.strategy.ShootStrategy;
 
 /**
  * 英雄飞机，游戏玩家操控
@@ -14,7 +15,8 @@ import edu.hitsz.strategy.HeroCircleShoot;
  */
 public class HeroAircraft extends AbstractAircraft {
     private volatile static HeroAircraft heroAircraft;
-
+    private int fireDuration = 0;
+    private ShootStrategy defaultStrategy = new HeroSingleShoot();
     // 构造方法传入策略，修改super
     private HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp, new HeroSingleShoot());
@@ -53,13 +55,34 @@ public class HeroAircraft extends AbstractAircraft {
     }
 
 
-    // 普通火力：切换为 三发散射策略
+
+
+    /// 普通火力：切换为 三发散射策略
     public void fireUp() {
         this.setShootStrategy(new HeroScatterShoot());
+        // 持续 3 秒（你的游戏 40ms 一帧，3s = 75帧）
+        this.fireDuration = 75;
     }
 
     // 超级火力：切换为 环形10发策略
     public void fireMax() {
         this.setShootStrategy(new HeroCircleShoot());
+        this.fireDuration = 75;
     }
+    // 设置火力时间
+    public void setFireDuration(int fireDuration) {
+        this.fireDuration = fireDuration;
+    }
+
+    // 恢复默认单发
+    public void resetFire() {
+        this.setShootStrategy(defaultStrategy);
+    }
+    public int getFireDuration() {
+        return fireDuration;
+    }
+
+
+
+
 }

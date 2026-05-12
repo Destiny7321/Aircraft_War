@@ -5,12 +5,15 @@ import edu.hitsz.bullet.BaseBullet;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import edu.hitsz.bullet.EnemyBullet;
+import edu.hitsz.observer.EnemyObserver;
 import edu.hitsz.strategy.PromaxDoubleShoot;
 
 
-public class PromaxEnemy extends AbstractAircraft {
+public class PromaxEnemy extends AbstractAircraft implements EnemyObserver {
 
     public PromaxEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp, new PromaxDoubleShoot());
@@ -25,5 +28,21 @@ public class PromaxEnemy extends AbstractAircraft {
         }
     }
 
+    @Override
+    public void updateBomb() {
+        vanish();
+    }
+
+    @Override
+    public void updateFreeze() {
+        int oldSpeedY = speedY;
+        speedY = 0;
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                speedY = oldSpeedY;
+            }
+        }, 3000); // 3秒恢复
+    }
 
 }

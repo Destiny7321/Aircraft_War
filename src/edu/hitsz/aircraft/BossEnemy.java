@@ -1,8 +1,9 @@
 package edu.hitsz.aircraft;
 
+import edu.hitsz.observer.EnemyObserver;
 import edu.hitsz.strategy.BossCircleShoot;
 
-public class BossEnemy extends AbstractAircraft {
+public class BossEnemy extends AbstractAircraft implements EnemyObserver {
 
     public BossEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp, new BossCircleShoot());
@@ -20,5 +21,14 @@ public class BossEnemy extends AbstractAircraft {
         if (locationX > 460) {
             speedX = -Math.abs(speedX);
         }
+    }
+    @Override
+    public void updateBomb() {
+        // 不受影响
+    }
+
+    @Override
+    public void updateFreeze() {
+        // 不受影响
     }
 }

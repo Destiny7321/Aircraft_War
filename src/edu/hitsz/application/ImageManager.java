@@ -26,7 +26,7 @@ public class ImageManager {
      */
     private static final Map<String, BufferedImage> CLASSNAME_IMAGE_MAP = new HashMap<>();
 
-    public static BufferedImage BACKGROUND_IMAGE;
+
     public static BufferedImage HERO_IMAGE;
     public static BufferedImage HERO_BULLET_IMAGE;
     public static BufferedImage ENEMY_BULLET_IMAGE;
@@ -41,12 +41,22 @@ public class ImageManager {
     public static BufferedImage BULLET_PLUS_PROP_IMAGE;
     public static BufferedImage BOMB_PROP_IMAGE;
     public static BufferedImage FREEZE_PROP_IMAGE;
+    //地图图片
+    public static BufferedImage BACKGROUND_IMAGE;
+    public static BufferedImage BACKGROUND_TRAVELLER;
+    public static BufferedImage BACKGROUND_SURVIVOR;
+    public static BufferedImage BACKGROUND_WARRIOR;
 
 
     static {
         try {
 
+            // 背景图
             BACKGROUND_IMAGE = ImageIO.read(new FileInputStream("src/images/bg.jpg"));
+            BACKGROUND_TRAVELLER = ImageIO.read(new FileInputStream("src/images/bg2.jpg"));
+            BACKGROUND_SURVIVOR = ImageIO.read(new FileInputStream("src/images/bg3.jpg"));
+            BACKGROUND_WARRIOR = ImageIO.read(new FileInputStream("src/images/bg4.jpg"));
+
 
             HERO_IMAGE = ImageIO.read(new FileInputStream("src/images/hero.png"));
             MOB_ENEMY_IMAGE = ImageIO.read(new FileInputStream("src/images/mob.png"));

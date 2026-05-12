@@ -5,10 +5,12 @@ import edu.hitsz.aircraft.AceEnemy;
 import edu.hitsz.aircraft.BossEnemy;
 import edu.hitsz.aircraft.ProEnemy;
 import edu.hitsz.aircraft.PromaxEnemy;
+import edu.hitsz.observer.PropSubject;
 
 public class PropFactory {
 
-    public static AbstractProp createProp(AbstractAircraft enemy, int locationX, int locationY) {
+    // 多加一个参数：PropSubject
+    public static AbstractProp createProp(AbstractAircraft enemy, int locationX, int locationY, PropSubject propSubject) {
         double rand = Math.random();
 
         if (enemy instanceof BossEnemy) {
@@ -19,13 +21,12 @@ public class PropFactory {
             } else if (rand < 0.60) {
                 return new BulletPlusProp(locationX, locationY, 0, 10);
             } else if (rand < 0.80) {
-                return new BombProp(locationX, locationY, 0, 10);
+                return new BombProp(locationX, locationY, 0, 10, propSubject);
             } else {
-                return new FreezeProp(locationX, locationY, 0, 10);
+                return new FreezeProp(locationX, locationY, 0, 10, propSubject);
             }
         }
 
-        // 精英敌机 ProEnemy：不掉冰冻
         else if (enemy instanceof ProEnemy) {
             if (rand < 0.25) {
                 return new BloodProp(locationX, locationY, 0, 10);
@@ -34,24 +35,22 @@ public class PropFactory {
             } else if (rand < 0.75) {
                 return new BulletPlusProp(locationX, locationY, 0, 10);
             } else {
-                return new BombProp(locationX, locationY, 0, 10);
+                return new BombProp(locationX, locationY, 0, 10, propSubject);
             }
         }
 
-        // 精锐 PromaxEnemy：不掉普通子弹
         else if (enemy instanceof PromaxEnemy) {
             if (rand < 0.25) {
                 return new BloodProp(locationX, locationY, 0, 10);
             } else if (rand < 0.50) {
                 return new BulletPlusProp(locationX, locationY, 0, 10);
             } else if (rand < 0.75) {
-                return new BombProp(locationX, locationY, 0, 10);
+                return new BombProp(locationX, locationY, 0, 10, propSubject);
             } else {
-                return new FreezeProp(locationX, locationY, 0, 10);
+                return new FreezeProp(locationX, locationY, 0, 10, propSubject);
             }
         }
 
-        // 王牌 AceEnemy：5种道具全都掉
         else if (enemy instanceof AceEnemy) {
             if (rand < 0.20) {
                 return new BloodProp(locationX, locationY, 0, 10);
@@ -60,9 +59,9 @@ public class PropFactory {
             } else if (rand < 0.60) {
                 return new BulletPlusProp(locationX, locationY, 0, 10);
             } else if (rand < 0.80) {
-                return new BombProp(locationX, locationY, 0, 10);
+                return new BombProp(locationX, locationY, 0, 10, propSubject);
             } else {
-                return new FreezeProp(locationX, locationY, 0, 10);
+                return new FreezeProp(locationX, locationY, 0, 10, propSubject);
             }
         }
 
