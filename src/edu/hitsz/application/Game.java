@@ -61,7 +61,7 @@ public class Game extends JPanel {
     private boolean difficultyIncrease; // 是否随时间变难
     protected double enemySpawnCycle  =  20;
     private int enemySpawnCounter = 0;
-
+    private int enemyShootCounter = 0;
     private int bossHp = 500;          // Boss 基础血量
     //屏幕中出现的敌机最大数量
     private final int enemyMaxNumber = 5;
@@ -75,6 +75,7 @@ public class Game extends JPanel {
 
     //当前玩家分数
     private int score = 0;
+    private int scoreToNextBoss = 200; // 距离下一只BOSS还需多少分
 
     // 难度递进参数（控制台输出）
     private double eliteEnemyRate = 0.20;      // 初始精英机概率
@@ -82,14 +83,18 @@ public class Game extends JPanel {
     private double enemyAttrMultiplier = 1.0;  // 敌机属性（血量/速度）提升倍率
     private final double difficultyStep = 0.02;// 每次提升的步长
 
-    // 标记：防止重复输出日志
+    // 标记防止重复输出日志
     private boolean difficultyRaised = false;
 
     //游戏结束标志
     private boolean gameOverFlag = false;
     //判断boss敌机是否出现
     private boolean bossAppeared = false;
-
+    // 肉鸽强化系统（附加内容）
+    private boolean gamePaused = false;
+    private int heroDamage = 15;      // 英雄子弹伤害
+    private int heroMaxHp = 100;      // 血量上限
+    private TimerTask gameTask;
     public Game() {
         heroAircraft = HeroAircraft.getHeroAircraft();
         enemyAircrafts = new LinkedList<>();
@@ -115,7 +120,7 @@ public class Game extends JPanel {
                 this.enemyBaseHp = 30;
                 this.enemySpeed = 1;
                 this.heroShootCycle = 10;
-                this.enemyShootCycle = 30;
+                this.enemyShootCycle = 40;
                 this.canSpawnBoss = false;
                 this.difficultyIncrease = false;
                 break;
@@ -125,7 +130,7 @@ public class Game extends JPanel {
                 this.enemyBaseHp = 50;
                 this.enemySpeed = 2;
                 this.heroShootCycle = 10;
-                this.enemyShootCycle = 25;
+                this.enemyShootCycle = 35;
                 this.canSpawnBoss = true;
                 this.difficultyIncrease = true;
                 break;
@@ -135,7 +140,7 @@ public class Game extends JPanel {
                 this.enemyBaseHp = 80;
                 this.enemySpeed = 3;
                 this.heroShootCycle = 15;
-                this.enemyShootCycle = 15;
+                this.enemyShootCycle = 30;
                 this.canSpawnBoss = true;
                 this.difficultyIncrease = true;
                 break;
@@ -159,7 +164,7 @@ public class Game extends JPanel {
     public void action() {
 
         // 定时任务：绘制、对象产生、碰撞判定、及结束判定
-        TimerTask task = new TimerTask() {
+        gameTask = new TimerTask() {
             @Override
             public void run() {
                 //难度递增逻辑
@@ -183,17 +188,19 @@ public class Game extends JPanel {
                 }
         //敌机生成规律控制
                 //BOSS 200 分触发
-                if (canSpawnBoss && score >= 200 && !bossAppeared) {
+                if (canSpawnBoss && score >= scoreToNextBoss && !bossAppeared) {
 
                     AbstractAircraft boss = new BossEnemyFactory().createEnemy();
 
-                    // 困难模式：额外加血
-                    if (difficulty.equals("warrior")) {
-                        boss.decreaseHp(-500); // 等价于加血 500
-                    }
+                    int bossHp = (score / 200 - 1) * 500;
+
+                    boss.decreaseHp(-bossHp);
+
+
 
                     enemyAircrafts.add(boss);
                     bossAppeared = true;
+                    System.out.println("BOSS 已生成，当前血量：" + boss.getHp());
 
                     // 停止普通背景音乐
                     if (bgmThread != null) {
@@ -285,7 +292,7 @@ public class Game extends JPanel {
             }
         };
         // 以固定延迟时间进行执行：本次任务执行完成后，延迟 timeInterval 再执行下一次
-        timer.schedule(task,0,timeInterval);
+        timer.schedule(gameTask,0,timeInterval);
 
     }
 
@@ -295,20 +302,20 @@ public class Game extends JPanel {
 
     private void shootAction() {
         shootCounter++;
+        enemyShootCounter++;
+
+        // 英雄机射击
         if (shootCounter >= shootCycle) {
             shootCounter = 0;
-            // 英雄机射击
             heroBullets.addAll(heroAircraft.shoot());
+        }
 
-            // 敌机射击
+        // 敌机射击单独计时
+        if (enemyShootCounter >= enemyShootCycle) {
+            enemyShootCounter = 0;
             for (AbstractAircraft enemy : enemyAircrafts) {
-                // 先拿到子弹列表
                 List<BaseBullet> bullets = enemy.shoot();
-
-                // 添加到全局列表
                 enemyBullets.addAll(bullets);
-
-                // ========== 子弹注册观察者（现在正常了） ==========
                 for (BaseBullet bullet : bullets) {
                     propSubject.attach((EnemyObserver) bullet);
                 }
@@ -349,10 +356,11 @@ public class Game extends JPanel {
                 continue;
             }
             if (heroAircraft.crash(bullet)) {
-                    heroAircraft.decreaseHp(bullet.getPower());
-                    bullet.vanish();
+                heroAircraft.decreaseHp(bullet.getPower());
+                bullet.vanish();
             }
         }
+
         // 英雄子弹攻击敌机
         for (BaseBullet bullet : heroBullets) {
             if (bullet.notValid()) {
@@ -360,38 +368,35 @@ public class Game extends JPanel {
             }
             for (AbstractAircraft enemyAircraft : enemyAircrafts) {
                 if (enemyAircraft.notValid()) {
-                    // 已被其他子弹击毁的敌机，不再检测
-                    // 避免多个子弹重复击毁同一敌机的判定
                     continue;
                 }
+
                 if (enemyAircraft.crash(bullet)) {
-                    // 敌机撞击到英雄机子弹
-                    // 敌机损失一定生命值
                     enemyAircraft.decreaseHp(bullet.getPower());
                     bullet.vanish();
+
                     if (enemyAircraft.notValid()) {
-                        //获得分数，产生道具补给
                         score += 10;
-                        // 播放击中音效
                         new MusicThread("src/videos/bullet_hit.wav").start();
-                        // 只有精英敌机坠毁才掉落道具
+
+                        // 普通精英敌机掉落道具
                         if (enemyAircraft instanceof ProEnemy
                                 || enemyAircraft instanceof PromaxEnemy
                                 || enemyAircraft instanceof AceEnemy) {
-                            // 使用简单工厂创建随机道具
-                                AbstractProp prop = PropFactory.createProp(
-                                        enemyAircraft,
-                                        enemyAircraft.getLocationX(),
-                                        enemyAircraft.getLocationY(),
-                                        propSubject
-                                );
-                                if(prop!= null) {
-                                    propList.add(prop);
-                                }
+                            AbstractProp prop = PropFactory.createProp(
+                                    enemyAircraft,
+                                    enemyAircraft.getLocationX(),
+                                    enemyAircraft.getLocationY(),
+                                    propSubject
+                            );
+                            if (prop != null) {
+                                propList.add(prop);
+                            }
                         }
-                        // 判断是不是 BOSS
+
+                        //BOSS 死亡处理
                         if (enemyAircraft instanceof BossEnemy) {
-                            // BOSS 死亡 → 一次性掉 3 个道具
+                            // BOSS 掉落3个道具
                             for (int i = 0; i < 3; i++) {
                                 AbstractProp prop = PropFactory.createProp(
                                         enemyAircraft,
@@ -399,25 +404,57 @@ public class Game extends JPanel {
                                         enemyAircraft.getLocationY(),
                                         propSubject
                                 );
-                                if(prop!= null) {
+                                if (prop != null) {
                                     propList.add(prop);
                                 }
                             }
-                            // 停止Boss背景音乐
-                            // 停止 Boss BGM
+                            scoreToNextBoss = score + 200;
+                            bossAppeared = false;
+                            //肉鸽强化
+                            String[] opts = {"伤害增加", "射速增加", "血量上限提升"};
+                            int select = JOptionPane.showOptionDialog(
+                                    Game.this,
+                                    "已击败Boss，请选择一项强化：",
+                                    "我要变强！",
+                                    JOptionPane.DEFAULT_OPTION,
+                                    JOptionPane.PLAIN_MESSAGE,
+                                    null, opts, opts[0]
+                            );
+
+                            // 应用强化
+                            switch (select) {
+                                case 0:
+                                    heroDamage += 5;
+                                    System.out.printf("选择伤害增加，当前伤害：%d，当前射速：%.0f%n",
+                                            heroDamage, shootCycle);
+                                    break;
+                                case 1:
+                                    shootCycle = Math.max(4, shootCycle - 1);
+                                    System.out.printf("选择射速增加，当前伤害：%d，当前射速：%.0f%n",
+                                            heroDamage, shootCycle);
+                                    break;
+                                case 2:
+                                    heroMaxHp += 400;
+                                    heroAircraft.decreaseHp(-heroMaxHp);
+                                    System.out.printf("选择血量恢复，当前伤害：%d，当前射速：%.0f%n",
+                                            heroDamage, shootCycle);
+                                    break;
+                            }
+
+                            // 切换BGM
                             if (bossBgmThread != null) {
                                 bossBgmThread.interrupt();
                                 bossBgmThread = null;
                                 isBossBgmPlaying = false;
                             }
-                            // 重新播放普通 BGM
                             bgmThread = new MusicThread("src/videos/bgm.wav");
                             bgmThread.start();
                             isBgmPlaying = true;
                         }
                     }
                 }
-                // 英雄机 与 敌机 相撞，均损毁
+
+                // 英雄机和敌机相撞
                 if (enemyAircraft.crash(heroAircraft) || heroAircraft.crash(enemyAircraft)) {
                     enemyAircraft.vanish();
                     heroAircraft.decreaseHp(Integer.MAX_VALUE);
@@ -425,16 +462,14 @@ public class Game extends JPanel {
             }
         }
 
-        //我方获得道具，道具生效
+        // 获得道具
         for (AbstractProp prop : propList) {
             if (prop.notValid()) {
                 continue;
             }
-            // 英雄机碰到道具
             if (heroAircraft.crash(prop)) {
                 prop.vanish();
-                prop.apply(heroAircraft); // 道具效果：加血/火力/超级火力
-                // 播放道具音效
+                prop.apply(heroAircraft);
                 new MusicThread("src/videos/get_supply.wav").start();
             }
         }

@@ -1,0 +1,37 @@
+@startuml
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor Black
+}
+
+' 抽象模板类
+abstract class DifficultyTemplate {
+    + final void initDifficulty()
+    # abstract void setEnemySpeed()
+    # abstract void setEnemyHp()
+    # abstract void setShootFrequency()
+}
+
+' 具体模板：简单难度
+class EasyDifficulty extends DifficultyTemplate {
+    # void setEnemySpeed()
+    # void setEnemyHp()
+    # void setShootFrequency()
+}
+
+' 具体模板：普通难度
+class MediumDifficulty extends DifficultyTemplate {
+    # void setEnemySpeed()
+    # void setEnemyHp()
+    # void setShootFrequency()
+}
+
+' 具体模板：困难难度
+class HardDifficulty extends DifficultyTemplate {
+    # void setEnemySpeed()
+    # void setEnemyHp()
+    # void setShootFrequency()
+}
+
+@enduml

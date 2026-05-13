@@ -3,7 +3,7 @@ package edu.hitsz.prop;
 import edu.hitsz.aircraft.HeroAircraft;
 
 public class BloodProp extends AbstractProp {
-    private static final int HEAL_AMOUNT = 20;
+    private static final int HEAL_AMOUNT = 100;
 
     public BloodProp(int locationX, int locationY, int speedX, int speedY) {
         super(locationX, locationY, speedX, speedY);

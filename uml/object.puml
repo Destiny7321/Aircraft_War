@@ -1,0 +1,65 @@
+@startuml
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor Black
+}
+
+' 抽象父类
+abstract class AbstractAircraft {
+    - int hp
+    - double x, y
+    - int speed
+    - boolean alive
+    + void move()
+    + void decreaseHp(int damage)
+    + boolean isAlive()
+    + List<BaseBullet> shoot()
+}
+
+abstract class BaseBullet {
+    - int damage
+    - double x, y
+    - int speed
+    - boolean alive
+    + void move()
+    + int getDamage()
+}
+
+abstract class AbstractProp {
+    - double x, y
+    - int speed
+    - boolean alive
+    + void move()
+    + void takeEffect(HeroAircraft hero)
+}
+
+' 英雄机
+class HeroAircraft extends AbstractAircraft {
+    - static HeroAircraft instance
+    - int fireLevel
+    + static HeroAircraft getInstance()
+    + List<BaseBullet> shoot()
+    + void increaseHp(int value)
+    + void upgradeFire()
+}
+
+' 敌机
+class MobEnemy extends AbstractAircraft
+class ProEnemy extends AbstractAircraft
+class ProMaxEnemy extends AbstractAircraft
+class AceEnemy extends AbstractAircraft
+class BossEnemy extends AbstractAircraft
+
+' 子弹
+class HeroBullet extends BaseBullet
+class EnemyBullet extends BaseBullet
+
+' 道具
+class FireProp extends AbstractProp
+class FirePlusProp extends AbstractProp
+class BloodProp extends AbstractProp
+class BombProp extends AbstractProp
+class FreezeProp extends AbstractProp
+
+@enduml

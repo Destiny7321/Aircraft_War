@@ -29,15 +29,13 @@ public class HeroAircraft extends AbstractAircraft {
                     heroAircraft = new HeroAircraft(
                             Main.WINDOW_WIDTH / 2,
                             Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight(),
-                            0, 0, 1000000);
+                            0, 0, 1000);
                 }
             }
         }
         return heroAircraft;
     }
 
-    // 子弹威力
-    private int power = 30;
 
     @Override
     public void forward() {

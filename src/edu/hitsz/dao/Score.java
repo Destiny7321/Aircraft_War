@@ -28,7 +28,7 @@ public class Score {
 
     @Override
     public String toString() {
-        // 改成完整格式：yyyy-MM-dd HH:mm:ss，包含年份
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return username + "," + score + "," + recordTime.format(formatter);
     }

@@ -1,0 +1,45 @@
+@startuml
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor Black
+}
+
+' 数值对象（实体）
+class ScoreRecord {
+    - String playerName
+    - int score
+    - String dateTime
+    - String difficulty
+    + ScoreRecord(String, int, String, String)
+    + String getPlayerName()
+    + int getScore()
+    + String getDateTime()
+    + String getDifficulty()
+}
+
+' DAO 接口
+interface ScoreDao {
+    + List<ScoreRecord> getAllRecords()
+    + void addRecord(ScoreRecord record)
+    + void deleteRecord(ScoreRecord record)
+    + List<ScoreRecord> getByDifficulty(String difficulty)
+}
+
+' DAO 实现类
+class ScoreDaoImpl implements ScoreDao {
+    - List<ScoreRecord> recordList
+    + ScoreDaoImpl()
+    + List<ScoreRecord> getAllRecords()
+    + void addRecord(ScoreRecord record)
+    + void deleteRecord(ScoreRecord record)
+    + List<ScoreRecord> getByDifficulty(String difficulty)
+}
+
+' 业务/测试类
+class ScoreDaoDemo {
+}
+
+ScoreDao --> ScoreRecord
+ScoreDaoImpl --> ScoreRecord
+@enduml

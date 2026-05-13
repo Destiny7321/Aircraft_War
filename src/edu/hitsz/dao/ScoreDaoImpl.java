@@ -94,9 +94,8 @@ public class ScoreDaoImpl implements ScoreDao {
         return scoreList;
     }
 
-    // ==========================
-    // 控制台打印（改好）
-    // ==========================
+
+    // 控制台打印
     @Override
     public void printRankList() {
         System.out.println("====== 得分排行榜 ======");

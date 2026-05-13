@@ -10,6 +10,7 @@ public class StartMenu {
     private JButton travellerButton;
     private JButton survivorButton;
     private JButton warriorButton;
+    private JLabel 选择难度;
     private JLabel titleLabel;
 
     public StartMenu() {

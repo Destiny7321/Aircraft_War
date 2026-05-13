@@ -1,0 +1,43 @@
+@startuml
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor Black
+}
+
+' 被观察者（主题）
+interface Subject {
+    + addObserver(Observer o)
+    + removeObserver(Observer o)
+    + notifyObservers()
+}
+
+' 观察者
+interface Observer {
+    + update()
+}
+
+' 具体被观察者：炸弹/冰冻道具
+class PropSubject implements Subject {
+    - List<Observer> observers
+    + addObserver(Observer o)
+    + removeObserver(Observer o)
+    + notifyObservers()
+    + trigger()
+}
+
+' 具体观察者1：敌机子弹
+class EnemyBullet implements Observer {
+    + update()
+}
+
+' 具体观察者2：敌机
+class AbstractAircraft implements Observer {
+    + update()
+}
+
+Subject --> Observer
+PropSubject -up-|> Subject
+EnemyBullet -up-|> Observer
+AbstractAircraft -up-|> Observer
+@enduml
